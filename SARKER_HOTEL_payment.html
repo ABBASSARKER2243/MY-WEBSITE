@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SARKER HOTEL</title>
+<style>
+:root{--orange:#f85606;--ink:#242424;--muted:#6b7280;--bg:#f5f6f8;--green:#138a4b;--line:#e7e7e7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{position:sticky;top:0;z-index:5;background:#fff;box-shadow:0 2px 10px #0001}
+.top{max-width:1100px;margin:auto;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-size:21px;font-weight:800;color:var(--orange)}.brand small{display:block;font-size:11px;color:#777;font-weight:500;margin-top:3px}
+.actions{display:flex;gap:8px}.btn{border:0;border-radius:9px;padding:11px 14px;font-weight:700;cursor:pointer}.lang{background:#fff0e8;color:var(--orange)}.cartbtn,.add{background:var(--orange);color:white}
+.hero{background:linear-gradient(115deg,#ff6a1a,#e83e00);color:#fff;padding:34px 18px}.hero>div,main{max-width:1100px;margin:auto}.hero h1{font-size:clamp(25px,5vw,40px);margin:0 0 9px}.hero p{margin:0}
+main{padding:24px 18px}.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.head h2{margin:0;font-size:23px}.search{width:min(270px,55%);padding:11px;border:1px solid #ddd;border-radius:9px;font:inherit}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}.card{background:#fff;border-radius:13px;overflow:hidden;box-shadow:0 3px 12px #0000000b;display:flex;flex-direction:column}.foodpic{height:125px;background:#fff1e8;display:grid;place-items:center;font-size:62px}.info{padding:12px;display:flex;flex-direction:column;flex:1}.name{font-weight:700;min-height:38px;line-height:1.4}.price{color:var(--orange);font-weight:800;margin:7px 0 11px}.add{width:100%;margin-top:auto}
+.panel{background:white;border-radius:13px;padding:18px;margin-top:23px;box-shadow:0 3px 12px #0000000b}.panel h2{margin:0 0 14px}.empty{text-align:center;color:var(--muted);padding:17px}.cartrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.qty{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}.qty button{border:0;border-radius:6px;width:29px;height:29px;background:#fff0e8;color:var(--orange);font-weight:bold;cursor:pointer}.total{text-align:right;font-size:21px;font-weight:800;color:var(--orange);margin:16px 0}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.field{width:100%;padding:12px;border:1px solid #d9d9d9;border-radius:8px;font:inherit;background:#fff}.wide{grid-column:1/-1}textarea.field{min-height:75px;resize:vertical}
+.paybox{border:1px solid #eee;border-radius:10px;padding:13px;margin:14px 0}.paybox h3{margin:0 0 10px;font-size:17px}.paychoices{display:flex;gap:10px;flex-wrap:wrap}.paychoice{display:flex;align-items:center;gap:7px;border:1px solid #ddd;border-radius:9px;padding:10px 13px;cursor:pointer}.paychoice:has(input:checked){border-color:var(--orange);background:#fff7f2}.payinfo{margin-top:12px;padding:12px;background:#fff8f3;border-radius:9px;line-height:1.6;font-size:14px}.paynumber{font-size:18px;font-weight:800;letter-spacing:.3px}.copy{border:0;border-radius:6px;padding:6px 9px;background:#ffe4d5;color:#9b3500;font-weight:700;cursor:pointer;margin-left:6px}
+.submit{width:100%;background:var(--green);color:#fff;padding:14px;font-size:16px;margin-top:13px}.hint{font-size:12px;color:var(--muted);line-height:1.55}.status{font-size:13px;color:var(--green);min-height:18px;margin-top:6px}
+footer{text-align:center;color:#777;padding:25px 12px;font-size:13px}
+@media(max-width:540px){.top{padding:11px}.brand{font-size:18px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.foodpic{height:102px;font-size:52px}.info{padding:10px}.name{font-size:14px}.head{align-items:flex-start;flex-direction:column}.search{width:100%}.formgrid{grid-template-columns:1fr}.wide{grid-column:1}.cartrow{align-items:flex-start}.qty{gap:5px}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header><div class="top">
+ <div class="brand">SARKER HOTEL<small id="tagline">Fresh snacks & tea</small></div>
+ <div class="actions"><button class="btn lang" id="langBtn" onclick="toggleLang()">বাংলা</button><button class="btn cartbtn" onclick="document.getElementById('cart').scrollIntoView({behavior:'smooth'})"><span id="cartLabel">Cart</span> (<span id="cartCount">0</span>)</button></div>
+</div></header>
+<section class="hero"><div><h1 id="heroTitle">Welcome to SARKER HOTEL!</h1><p id="heroText">Tasty snacks, fresh tea and eggs at pocket-friendly prices.</p></div></section>
+<main>
+ <div class="head"><h2 id="productsTitle">Our Products</h2><input class="search" id="search" placeholder="Search products..." oninput="renderProducts()"></div>
+ <div class="grid" id="products"></div>
+ <section class="panel" id="cart">
+  <h2 id="cartTitle">Your Cart</h2><div id="cartItems"><div class="empty">Your cart is empty.</div></div>
+  <div class="total"><span id="totalLabel">Total:</span> ৳<span id="total">0</span></div>
+  <h2 id="checkoutTitle">Delivery & payment details</h2>
+  <div class="formgrid">
+   <input class="field" id="customer" placeholder="Your name">
+   <input class="field" id="phone" placeholder="Your mobile number" inputmode="tel">
+   <textarea class="field wide" id="address" placeholder="Delivery address"></textarea>
+  </div>
+  <div class="paybox">
+   <h3 id="paymentTitle">Choose payment method</h3>
+   <div class="paychoices">
+    <label class="paychoice"><input type="radio" name="payment" value="bKash" checked onchange="showPayment()"> <b style="color:#d81b60">bKash</b></label>
+    <label class="paychoice"><input type="radio" name="payment" value="Nagad" onchange="showPayment()"> <b style="color:#ed6500">Nagad</b></label>
+    <label class="paychoice"><input type="radio" name="payment" value="Cash on delivery" onchange="showPayment()"> <b id="codLabel">Cash on delivery</b></label>
+   </div>
+   <div class="payinfo" id="payInfo"></div>
+   <div id="trxWrap"><input class="field" id="trx" placeholder="Enter bKash/Nagad Transaction ID" style="margin-top:10px"></div>
+   <div class="hint" id="paymentHint">Send the exact order total to the displayed personal number using Send Money. Then enter the Transaction ID (TrxID) here. We will verify it manually before confirming your order.</div>
+  </div>
+  <button class="btn submit" id="orderBtn" onclick="placeOrder()">Submit order via WhatsApp</button>
+  <div class="status" id="status"></div>
+  <p class="hint" id="bottomNote">Manual payment only: payment is not verified automatically. Replace the sample bKash/Nagad and WhatsApp numbers in the code with your own numbers before publishing. Follow your provider's rules for personal-account use.</p>
+ </section>
+</main>
+<footer>© <span id="year"></span> Abbas Food Shop. <span id="footerText">All rights reserved.</span></footer>
+<script>
+// IMPORTANT: Replace these sample values with your own active numbers before publishing.
+// Use country code format for WhatsApp, without + or spaces.
+const SHOP={
+ bkash:"01740483464",
+ nagad:"01722434968",
+ whatsapp:"8801722434968"
+};
+const products=[
+ {id:1,en:"Red Tea",bn:"লাল চা",price:5,unitEn:"per cup",unitBn:"প্রতি কাপ",emoji:"🍵"},
+ {id:2,en:"Puri",bn:"পুরি",price:10,unitEn:"per piece",unitBn:"প্রতি পিস",emoji:"🥟"},
+ {id:3,en:"Mughlai Paratha",bn:"মুগলাই",price:40,unitEn:"per piece",unitBn:"প্রতি পিস",emoji:"🫓"},
+ {id:4,en:"Peyaju",bn:"পেঁয়াজু",price:5,unitEn:"per piece",unitBn:"প্রতি পিস",emoji:"🧆"},
+ {id:5,en:"Gulgula",bn:"গুলগুলা",price:5,unitEn:"per piece",unitBn:"প্রতি পিস",emoji:"🍩"},
+ {id:6,en:"Duck Egg",bn:"হাঁসের ডিম",price:25,unitEn:"per piece",unitBn:"প্রতি পিস",emoji:"🥚"},
+ {id:7,en:"Broiler Chicken Egg",bn:"ব্রয়লার মুরগির ডিম",price:20,unitEn:"per piece",unitBn:"প্রতি পিস",emoji:"🥚"}
+];
+let lang="en",cart={};
+const copy={
+ en:{tag:"Fresh snacks & tea",hero:"Welcome to Abbas Food Shop!",heroText:"Tasty snacks, fresh tea and eggs at pocket-friendly prices.",products:"Our Products",cart:"Cart",cartTitle:"Your Cart",empty:"Your cart is empty.",total:"Total:",checkout:"Delivery & payment details",name:"Your name",phone:"Your mobile number",address:"Delivery address",payment:"Choose payment method",cod:"Cash on delivery",order:"Submit order via WhatsApp",hint:"Send the exact order total to the displayed personal number using Send Money. Then enter the Transaction ID (TrxID) here. We will verify it manually before confirming your order.",note:"Manual payment only: payment is not verified automatically. Replace the sample bKash/Nagad and WhatsApp numbers in the code with your own numbers before publishing. Follow your provider's rules for personal-account use.",search:"Search products...",noItems:"Please add at least one product to your cart.",missing:"Please enter your name, mobile number and delivery address.",trxMissing:"Please enter the payment Transaction ID.",numberMissing:"Please set the shop payment/WhatsApp number in the code first.",footer:"All rights reserved.",send:"Send Money to this personal number:",codInfo:"Pay cash when your order is delivered. No advance payment is needed."},
+ bn:{tag:"তাজা নাস্তা ও চা",hero:"আব্বাস ফুড শপে আপনাকে স্বাগতম!",heroText:"সাশ্রয়ী দামে মজাদার নাস্তা, চা ও ডিম।",products:"আমাদের পণ্যসমূহ",cart:"কার্ট",cartTitle:"আপনার কার্ট",empty:"আপনার কার্ট খালি।",total:"সর্বমোট:",checkout:"ডেলিভারি ও পেমেন্টের তথ্য",name:"আপনার নাম",phone:"আপনার মোবাইল নম্বর",address:"ডেলিভারির ঠিকানা",payment:"পেমেন্ট পদ্ধতি নির্বাচন করুন",cod:"ক্যাশ অন ডেলিভারি",order:"WhatsApp-এ অর্ডার পাঠান",hint:"Send Money অপশন দিয়ে দেখানো ব্যক্তিগত নম্বরে অর্ডারের সম্পূর্ণ টাকা পাঠান। এরপর Transaction ID (TrxID) এখানে লিখুন। অর্ডার নিশ্চিত করার আগে আমরা ম্যানুয়ালি পেমেন্ট যাচাই করব।",note:"এটি ম্যানুয়াল পেমেন্ট ব্যবস্থা; পেমেন্ট স্বয়ংক্রিয়ভাবে যাচাই হয় না। প্রকাশ করার আগে কোডে bKash/Nagad ও WhatsApp নম্বর নিজের নম্বর দিয়ে বদলে নিন। ব্যক্তিগত অ্যাকাউন্ট ব্যবহারে সংশ্লিষ্ট প্রতিষ্ঠানের নিয়ম মেনে চলুন।",search:"পণ্য খুঁজুন...",noItems:"অর্ডার করার আগে কার্টে পণ্য যোগ করুন।",missing:"আপনার নাম, মোবাইল নম্বর ও ডেলিভারির ঠিকানা লিখুন।",trxMissing:"পেমেন্টের Transaction ID লিখুন।",numberMissing:"আগে কোডে দোকানের পেমেন্ট ও WhatsApp নম্বর বসান।",footer:"সর্বস্বত্ব সংরক্ষিত।",send:"এই ব্যক্তিগত নম্বরে Send Money করুন:",codInfo:"পণ্য হাতে পাওয়ার পর নগদ টাকা পরিশোধ করুন। অগ্রিম টাকা দিতে হবে না।"}
+};
+function t(k){return copy[lang][k]}
+function pname(p){return lang==="bn"?p.bn:p.en}
+function selectedPay(){return document.querySelector('input[name="payment"]:checked').value}
+function renderProducts(){const q=document.getElementById("search").value.toLowerCase();document.getElementById("products").innerHTML=products.filter(p=>(p.en+" "+p.bn).toLowerCase().includes(q)).map(p=>`<article class="card"><div class="foodpic">${p.emoji}</div><div class="info"><div class="name">${pname(p)}</div><div class="price">৳${p.price} <small style="color:#777;font-weight:400">${lang==="bn"?p.unitBn:p.unitEn}</small></div><button class="btn add" onclick="add(${p.id})">${lang==="bn"?"কার্টে যোগ করুন":"Add to Cart"}</button></div></article>`).join("")}
+function add(id){cart[id]=(cart[id]||0)+1;renderCart()}
+function change(id,n){cart[id]=(cart[id]||0)+n;if(cart[id]<=0)delete cart[id];renderCart()}
+function getTotal(){return products.reduce((s,p)=>s+p.price*(cart[p.id]||0),0)}
+function renderCart(){let entries=products.filter(p=>cart[p.id]);document.getElementById("cartCount").textContent=Object.values(cart).reduce((a,b)=>a+b,0);document.getElementById("cartItems").innerHTML=entries.length?entries.map(p=>`<div class="cartrow"><div><b>${pname(p)}</b><br><small>৳${p.price} × ${cart[p.id]}</small></div><div class="qty"><button onclick="change(${p.id},-1)">−</button><b>${cart[p.id]}</b><button onclick="change(${p.id},1)">+</button><b>৳${p.price*cart[p.id]}</b></div></div>`).join(""):`<div class="empty">${t("empty")}</div>`;document.getElementById("total").textContent=getTotal()}
+function showPayment(){let method=selectedPay(),info=document.getElementById("payInfo"),trx=document.getElementById("trxWrap");if(method==="Cash on delivery"){info.textContent=t("codInfo");trx.style.display="none"}else{let number=method==="bKash"?SHOP.bkash:SHOP.nagad;info.innerHTML=`${t("send")}<br><span class="paynumber">${number}</span> <button class="copy" onclick="copyNumber('${number}')">${lang==="bn"?"কপি":"Copy"}</button><br><b>${lang==="bn"?"মোট টাকা:":"Amount:"} ৳${getTotal()}</b>`;trx.style.display="block";document.getElementById("trx").placeholder=lang==="bn"?"bKash/Nagad Transaction ID লিখুন":"Enter bKash/Nagad Transaction ID"}}
+function copyNumber(n){if(n.includes("X")){alert(t("numberMissing"));return}navigator.clipboard?.writeText(n).then(()=>alert(lang==="bn"?"নম্বর কপি হয়েছে":"Number copied")).catch(()=>alert(n))}
+function toggleLang(){lang=lang==="en"?"bn":"en";document.documentElement.lang=lang;let keys={tagline:"tag",heroTitle:"hero",heroText:"heroText",productsTitle:"products",cartLabel:"cart",cartTitle:"cartTitle",totalLabel:"total",checkoutTitle:"checkout",paymentTitle:"payment",codLabel:"cod",orderBtn:"order",paymentHint:"hint",bottomNote:"note",footerText:"footer"};for(let id in keys)document.getElementById(id).textContent=t(keys[id]);document.getElementById("langBtn").textContent=lang==="en"?"বাংলা":"English";for(let [id,key] of [["customer","name"],["phone","phone"],["address","address"],["search","search"]])document.getElementById(id).placeholder=t(key);renderProducts();renderCart();showPayment()}
+function placeOrder(){let method=selectedPay(),name=document.getElementById("customer").value.trim(),phone=document.getElementById("phone").value.trim(),address=document.getElementById("address").value.trim(),trx=document.getElementById("trx").value.trim();if(!Object.keys(cart).length){alert(t("noItems"));return}if(!name||!phone||!address){alert(t("missing"));return}if(method!=="Cash on delivery"&&!trx){alert(t("trxMissing"));return}if(SHOP.whatsapp.includes("X")){alert(t("numberMissing"));return}if(method!=="Cash on delivery"&&(method==="bKash"?SHOP.bkash:SHOP.nagad).includes("X")){alert(t("numberMissing"));return}
+let lines=products.filter(p=>cart[p.id]).map(p=>`${pname(p)} x ${cart[p.id]} = Tk ${p.price*cart[p.id]}`);let msg=`New order - SARKER HOTEL\nName: ${name}\nCustomer phone: ${phone}\nAddress: ${address}\n\n${lines.join("\n")}\n\nTotal: Tk ${getTotal()}\nPayment method: ${method}\n${method==="Cash on delivery"?"Payment: Cash on delivery":`Payment number: ${method==="bKash"?SHOP.bkash:SHOP.nagad}\nTransaction ID: ${trx}\nPayment status: Customer submitted TrxID; verify manually.`}`;window.open(`https://wa.me/${SHOP.whatsapp}?text=${encodeURIComponent(msg)}`,"_blank")}
+document.getElementById("year").textContent=new Date().getFullYear();renderProducts();renderCart();showPayment();
+</script>
+</body></html>
